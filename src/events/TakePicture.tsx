@@ -24,9 +24,10 @@ export function TakePicture({ round, onFinish }: Props) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [caption, setCaption] = useState("");
   const [msgIdx, setMsgIdx] = useState(0);
+  const [snapshot, setSnapshot] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const delayRef = useRef(2000 + Math.floor(Math.random() * 3001)); // 2–5s
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const delayRef = useRef(2000 + Math.floor(Math.random() * 3001));
 
   useEffect(() => {
     if (phase !== "live") return;
@@ -37,10 +38,8 @@ export function TakePicture({ round, onFinish }: Props) {
   async function startCamera() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-      streamRef.current = stream;
       setPhase("live");
 
-      // Attach stream to video element after state update
       setTimeout(() => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -49,6 +48,23 @@ export function TakePicture({ round, onFinish }: Props) {
       }, 0);
 
       setTimeout(() => {
+        // Capture a frame to canvas
+        if (videoRef.current && canvasRef.current) {
+          const vid = videoRef.current;
+          const canvas = canvasRef.current;
+          canvas.width = vid.videoWidth || 320;
+          canvas.height = vid.videoHeight || 240;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            // Draw mirrored to match display
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(vid, -canvas.width, 0);
+            ctx.restore();
+            setSnapshot(canvas.toDataURL("image/jpeg", 0.85));
+          }
+        }
+
         stream.getTracks().forEach(t => t.stop());
         const correct = round.eventWin ?? true;
         setCaption(correct ? "That's a good numdle!" : "your face is not numdlewang.");
@@ -70,23 +86,31 @@ export function TakePicture({ round, onFinish }: Props) {
         <>
           <div className={styles.icon}>📷</div>
           <p className={styles.prompt}>Turn on your camera to submit your answer.</p>
-          <button className={styles.btn} onClick={startCamera}>Allow Camera</button>
+          <button className={styles.btn} onClick={startCamera}>📷 Allow Camera</button>
         </>
       )}
 
-      {(phase === "live" || phase === "result") && (
+      {phase === "live" && (
         <div className={styles.videoWrap}>
           <video ref={videoRef} className={styles.video} muted playsInline autoPlay />
-          {phase === "live" && (
-            <div className={styles.detecting}>{DETECT_MSGS[msgIdx]}</div>
-          )}
-          {phase === "result" && (
-            <div className={`${styles.caption} ${round.eventWin ? styles.captionWin : styles.captionLose}`}>
-              {caption}
-            </div>
-          )}
+          <div className={styles.detecting}>{DETECT_MSGS[msgIdx]}</div>
         </div>
       )}
+
+      {phase === "result" && (
+        <div className={styles.videoWrap}>
+          {snapshot
+            ? <img src={snapshot} className={styles.video} alt="captured" />
+            : <video ref={videoRef} className={styles.video} muted playsInline />
+          }
+          <div className={`${styles.caption} ${round.eventWin ? styles.captionWin : styles.captionLose}`}>
+            {caption}
+          </div>
+        </div>
+      )}
+
+      {/* Hidden canvas for capture */}
+      <canvas ref={canvasRef} style={{ display: "none" }} />
 
       {phase === "denied" && (
         <>

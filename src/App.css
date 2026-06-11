@@ -38,6 +38,20 @@ body {
   gap: 12px;
   padding: 24px 16px 16px;
   border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 200; /* sits above Wanganum overlay */
+  transition: background 0.3s;
+}
+
+@keyframes header-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.header-rotating {
+  animation: header-spin 5s linear infinite;
+  transform-origin: center;
+  background: #0d0d1a;
 }
 
 .title {
@@ -73,6 +87,8 @@ body {
   border-bottom: 1px solid #3d2070;
   font-size: 0.8rem;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 200;
 }
 
 .dev-seed {

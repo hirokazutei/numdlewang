@@ -9,11 +9,19 @@ interface Props {
   onFinish: (correct: boolean) => void;
 }
 
-const SCRAMBLE = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%±∑∏√∂∫∞≈×÷αβγδφψω𓀀𓁿";
+// Scramble tokens mirror the game's type distribution
+const _MATH = ["√","∛","!","∑","∏","∂","∫","∞","≈","±","÷","×"];
+const _LETTERS = "abcdefghijklmnopqrstuvwxyz";
+const _GLYPHS = [..."𓀀𓀁𓀂𓀃𓀄𓀅𓀆𓀇𓀈𓀉𓀊𓀋𓀌𓀍𓀎𓀏𓀐𓀑𓀒𓀓𓀤𓀥𓀦𓀧"];
+const _FOOD = ["寿司","ラーメン","天ぷら","餃子","たこ焼き","うどん","刺身","豆腐"];
 
-function randomScramble() {
-  const len = 3 + Math.floor(Math.random() * 6);
-  return Array.from({ length: len }, () => SCRAMBLE[Math.floor(Math.random() * SCRAMBLE.length)]).join("");
+function randomScramble(): string {
+  const r = Math.random();
+  if (r < 0.03) return _MATH[Math.floor(Math.random() * _MATH.length)];
+  if (r < 0.06) return _LETTERS[Math.floor(Math.random() * _LETTERS.length)];
+  if (r < 0.08) return _GLYPHS[Math.floor(Math.random() * _GLYPHS.length)];
+  if (r < 0.10) return _FOOD[Math.floor(Math.random() * _FOOD.length)];
+  return String(Math.floor(Math.random() * 9999));
 }
 
 function computedOutput(input: string): string {

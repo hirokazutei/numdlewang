@@ -14,17 +14,12 @@
   color: #fbbf24;
   animation: flicker 0.8s ease-in-out infinite alternate;
 }
-
-@keyframes flicker {
-  from { opacity: 1; }
-  to   { opacity: 0.7; }
-}
+@keyframes flicker { from { opacity: 1; } to { opacity: 0.7; } }
 
 .timer {
   font-size: 2.4rem;
   font-weight: bold;
   font-family: monospace;
-  letter-spacing: 0.05em;
   transition: color 0.3s;
 }
 
@@ -36,33 +31,38 @@
   max-width: 720px;
 }
 
-.num {
+.btn {
   padding: 12px 18px;
   background: #1e1e2e;
   border: 2px solid #fbbf24;
   border-radius: 8px;
-  color: #fbbf24;
   font-size: 1.2rem;
   font-weight: bold;
   font-family: inherit;
   cursor: pointer;
   transition: transform 0.1s, background 0.15s;
   animation: pop-in 0.15s ease;
+  color: #e0e0e0;
 }
-
-.num:hover { transform: scale(1.08); background: #2a2a1e; }
-.num:active { transform: scale(0.94); }
+.btn:hover { transform: scale(1.08); background: #2a2a1e; }
+.btn:active { transform: scale(0.94); }
 
 @keyframes pop-in {
-  from { transform: scale(0.5); opacity: 0; }
+  from { transform: scale(0.3); opacity: 0; }
   to   { transform: scale(1);   opacity: 1; }
 }
 
-.gone {
-  /* empty placeholder keeps grid stable */
-  width: 60px;
-  height: 48px;
-  opacity: 0;
+/* Type overrides */
+.num      { color: #e0e0e0; border-color: #fbbf24; }
+.math     { color: #a78bfa; border-color: #a78bfa; }
+.letter   { color: #34d399; border-color: #34d399; }
+.hieroglyph {
+  font-family: "Noto Sans Egyptian Hieroglyphs", serif;
+  color: #f5c542; border-color: #f5c542;
+}
+.food {
+  color: #fb923c; border-color: #fb923c;
+  font-family: "Noto Sans JP", sans-serif;
 }
 
 .won  { font-size: 1.8rem; font-weight: bold; color: #34d399; }

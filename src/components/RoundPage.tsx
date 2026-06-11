@@ -16,6 +16,8 @@ interface Props {
   total: number;
   onAdvance: (correct: boolean) => void;
   forcedEvent?: SpecialEventType | null;
+  onRotateStart?: () => void;
+  onRotateEnd?: () => void;
 }
 
 const TYPE_CLASS: Record<string, string> = {
@@ -50,7 +52,7 @@ function applyForcedEvent(round: Round, eventType: SpecialEventType): Round {
   }
 }
 
-export function RoundPage({ round, index, total, onAdvance, forcedEvent }: Props) {
+export function RoundPage({ round, index, total, onAdvance, forcedEvent, onRotateStart, onRotateEnd }: Props) {
   const [chosen, setChosen] = useState<number | null>(null);
   const [correct, setCorrect] = useState<boolean | null>(null);
   const [advancing, setAdvancing] = useState(false);
@@ -102,6 +104,8 @@ export function RoundPage({ round, index, total, onAdvance, forcedEvent }: Props
             duration={effectiveRound.wanganumDuration ?? 8000}
             roundLabel={`Round ${index + 1} / ${total}`}
             onFinish={handleAdvance}
+            onRotateStart={onRotateStart}
+            onRotateEnd={onRotateEnd}
           />
         )}
 

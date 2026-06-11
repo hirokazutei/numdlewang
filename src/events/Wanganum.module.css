@@ -1,8 +1,8 @@
-/* Full-screen overlay — covers header and everything */
+/* Covers game area; header sits above at z-index 200 and rotates separately */
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 50;
   background: #0d0d1a;
   display: flex;
   align-items: center;
@@ -35,14 +35,6 @@
   animation: spinCw 5s linear infinite;
   transform-origin: center;
   z-index: 1;
-}
-
-.gameTitle {
-  font-size: 2.4rem;
-  font-weight: bold;
-  font-family: 'Courier New', Courier, monospace;
-  color: #a78bfa;
-  letter-spacing: 0.08em;
 }
 
 .roundLabel {

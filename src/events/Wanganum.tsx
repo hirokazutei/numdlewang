@@ -6,9 +6,11 @@ interface Props {
   duration: number;
   roundLabel: string;
   onFinish: (correct: boolean) => void;
+  onRotateStart?: () => void;
+  onRotateEnd?: () => void;
 }
 
-export function Wanganum({ duration, roundLabel, onFinish }: Props) {
+export function Wanganum({ duration, roundLabel, onFinish, onRotateStart, onRotateEnd }: Props) {
   const [phase, setPhase] = useState<"rotating" | "done" | "interrupted">("rotating");
 
   const bgItems = useMemo(() => {
@@ -24,6 +26,13 @@ export function Wanganum({ duration, roundLabel, onFinish }: Props) {
       id: i,
     }));
   }, [duration]);
+
+  // Signal the app header to start / stop rotating
+  useEffect(() => {
+    onRotateStart?.();
+    return () => onRotateEnd?.();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (phase !== "rotating") return;
@@ -42,16 +51,13 @@ export function Wanganum({ duration, roundLabel, onFinish }: Props) {
 
   return (
     <div className={styles.overlay}>
-      {/* Spinning background numbers */}
       {bgItems.map(item => (
         <div
           key={item.id}
           className={`${styles.bgNum} ${item.reverse ? styles.spinCcw : styles.spinCw}`}
           style={{
-            left: `${item.x}%`,
-            top: `${item.y}%`,
-            fontSize: `${item.size}rem`,
-            opacity: item.opacity,
+            left: `${item.x}%`, top: `${item.y}%`,
+            fontSize: `${item.size}rem`, opacity: item.opacity,
             animationDuration: `${item.speed}s`,
           }}
         >
@@ -59,12 +65,11 @@ export function Wanganum({ duration, roundLabel, onFinish }: Props) {
         </div>
       ))}
 
-      {/* Everything in the rotating container */}
       <div
         className={styles.rotating}
         style={{ animationPlayState: phase !== "rotating" ? "paused" : "running" }}
       >
-        <div className={styles.gameTitle}>numdlewang</div>
+        {/* roundLabel rotates — the real app title (above overlay) rotates via CSS class */}
         <div className={styles.roundLabel}>{roundLabel}</div>
         <div className={styles.eventTitle}>Let's rotate the board!</div>
         {phase === "rotating" && (
@@ -75,9 +80,7 @@ export function Wanganum({ duration, roundLabel, onFinish }: Props) {
       </div>
 
       {phase === "done" && (
-        <div className={styles.doneText}>
-          Everything has been sufficiently rotated.
-        </div>
+        <div className={styles.doneText}>Everything has been sufficiently rotated.</div>
       )}
       {phase === "interrupted" && (
         <div className={styles.lost}>numblewrong. :(</div>

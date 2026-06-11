@@ -62,7 +62,7 @@ export function VoiceEvent({ round, onFinish }: Props) {
         <>
           <div className={styles.icon}>🎤</div>
           <p className={styles.prompt}>Grant microphone access and say any number.</p>
-          <button className={styles.btn} onClick={startListening}>Allow Microphone</button>
+          <button className={styles.btn} onClick={startListening}>🎤 Allow Microphone</button>
         </>
       )}
 

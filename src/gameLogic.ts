@@ -152,7 +152,7 @@ export function buildGameConfig(dateStr: string): GameConfig {
       specialEvent = EVENTS[Math.floor(rng() * EVENTS.length)];
       if (specialEvent === "nundle-storm") {
         const count = 15 + Math.floor(rng() * 11);
-        stormNumbers = Array.from({ length: count }, () => ({ type: "number" as const, value: makeNumberValue(rng) }));
+        stormNumbers = Array.from({ length: count }, () => makeGuessItem(rng));
       } else if (specialEvent === "wanganum") {
         wanganumDuration = 5000 + Math.floor(rng() * 175001);
       } else if (specialEvent === "helpful-knower") {

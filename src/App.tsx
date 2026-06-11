@@ -26,6 +26,7 @@ export default function App() {
   const [currentRound, setCurrentRound] = useState(0);
   const [done, setDone] = useState(false);
   const [devForceEvent, setDevForceEvent] = useState<SpecialEventType | null>(null);
+  const [headerRotating, setHeaderRotating] = useState(false);
 
   const config = buildGameConfig(seed);
 
@@ -94,7 +95,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="header">
+      <header className={`header ${headerRotating ? "header-rotating" : ""}`}>
         <h1 className="title">numdlewang</h1>
         <span className="puzzle-num">{DEV ? "dev" : `#${puzzleNumber}`}</span>
       </header>
@@ -133,6 +134,8 @@ export default function App() {
             total={config.roundCount}
             onAdvance={handleAdvance}
             forcedEvent={DEV ? devForceEvent : null}
+            onRotateStart={() => setHeaderRotating(true)}
+            onRotateEnd={() => setHeaderRotating(false)}
           />
         ) : null}
       </main>
