@@ -9,6 +9,8 @@ import { TakePicture } from "../events/TakePicture";
 import { HelpfulKnower } from "../events/HelpfulKnower";
 import { Wanganum } from "../events/Wanganum";
 import { CurseOfRa } from "../events/CurseOfRa";
+import { SixOrSeven } from "../events/SixOrSeven";
+import { NineEleven } from "../events/NineEleven";
 import styles from "./RoundPage.module.css";
 
 interface Props {
@@ -55,6 +57,10 @@ function applyForcedEvent(round: Round, eventType: SpecialEventType): Round {
     case "take-picture":
       return { ...base, eventWin: true };
     case "curse-of-ra":
+      return base;
+    case "six-or-seven":
+      return { ...base, correctIndex: Math.floor(Math.random() * 2) as 0 | 1 };
+    case "nine-eleven":
       return base;
     default:
       return base;
@@ -146,6 +152,12 @@ export function RoundPage({ round, index, total, onAdvance, forcedEvent, onRotat
 
         {eventType === "curse-of-ra" && (
           <CurseOfRa onFinish={handleAdvance} />
+        )}
+        {eventType === "six-or-seven" && (
+          <SixOrSeven round={effectiveRound} onFinish={handleAdvance} />
+        )}
+        {eventType === "nine-eleven" && (
+          <NineEleven onFinish={handleAdvance} />
         )}
 
         {/* Show progress for non-fullscreen special events */}

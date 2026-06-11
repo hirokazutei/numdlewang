@@ -110,13 +110,13 @@ export default function App() {
           </div>
           <div className="dev-bar dev-events">
             <span className="dev-seed">force event:</span>
-            {(["nundle-storm", "enter-number", "voice", "take-picture", "helpful-knower", "wanganum", "curse-of-ra"] as SpecialEventType[]).map(e => (
+            {(["nundle-storm", "enter-number", "voice", "take-picture", "helpful-knower", "wanganum", "curse-of-ra", "six-or-seven", "nine-eleven"] as SpecialEventType[]).map(e => (
               <button
                 key={e}
                 className={`dev-btn ${devForceEvent === e ? "dev-btn-active" : ""}`}
                 onClick={() => setDevForceEvent(devForceEvent === e ? null : e)}
               >
-                {e === "nundle-storm" ? "⚡ Storm" : e === "enter-number" ? "✏️ Enter" : e === "voice" ? "🎤 Voice" : e === "take-picture" ? "📷 Camera" : e === "helpful-knower" ? "👉 Knower" : e === "wanganum" ? "🌀 Wang" : "☥ Ra"}
+                {e === "nundle-storm" ? "⚡ Storm" : e === "enter-number" ? "✏️ Enter" : e === "voice" ? "🎤 Voice" : e === "take-picture" ? "📷 Camera" : e === "helpful-knower" ? "👉 Knower" : e === "wanganum" ? "🌀 Wang" : e === "curse-of-ra" ? "☥ Ra" : e === "six-or-seven" ? "6/7" : "9/11"}
               </button>
             ))}
           </div>

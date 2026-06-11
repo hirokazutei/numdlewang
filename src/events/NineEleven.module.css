@@ -1,0 +1,128 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 32px 20px;
+  width: 100%;
+  min-height: 420px;
+}
+
+/* ── Flying phase ───────────────────────────────────── */
+
+.scene {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.towers {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  position: relative;
+  z-index: 1;
+}
+
+.tower {
+  width: 72px;
+  height: 240px;
+  background: #1c1c30;
+  border: 2px solid #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #c0c0c0;
+  font-family: 'Courier New', monospace;
+}
+
+.planeLeft {
+  position: absolute;
+  left: 4%;
+  top: 38%;
+  font-size: 3rem;
+  z-index: 2;
+  animation: crashLeft 3s ease-in forwards;
+}
+
+@keyframes crashLeft {
+  0%   { left: 4%;  opacity: 1; }
+  80%  {             opacity: 1; }
+  100% { left: 42%; opacity: 0; }
+}
+
+.planeRight {
+  position: absolute;
+  right: 4%;
+  top: 26%;
+  font-size: 3rem;
+  z-index: 2;
+  animation: crashRight 3s ease-in forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes crashRight {
+  0%   { right: 4%;  opacity: 1; }
+  80%  {              opacity: 1; }
+  100% { right: 42%; opacity: 0; }
+}
+
+.flipped {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+/* ── Memorial phase ─────────────────────────────────── */
+
+.memorial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.icons {
+  font-size: 3.5rem;
+  letter-spacing: 0.3em;
+}
+
+.caption {
+  font-size: 1.2rem;
+  color: #ccc;
+  text-align: center;
+  letter-spacing: 0.04em;
+  margin: 0;
+  max-width: 340px;
+}
+
+.promiseBtn {
+  padding: 14px 40px;
+  background: transparent;
+  color: #a78bfa;
+  border: 2px solid #a78bfa;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.promiseBtn:hover {
+  background: #a78bfa;
+  color: #0a0a14;
+}
