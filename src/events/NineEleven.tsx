@@ -8,10 +8,12 @@ interface Props {
 export function NineEleven({ onFinish }: Props) {
   const [phase, setPhase] = useState<"flying" | "memorial">("flying");
   const [taunt, setTaunt] = useState(false);
+  const [exploding, setExploding] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setPhase("memorial"), 3200);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => setExploding(true), 2750); // planes reach towers
+    const t2 = setTimeout(() => setPhase("memorial"), 4000); // wait for explosions then transition
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   function handleSceneClick() {
@@ -30,6 +32,14 @@ export function NineEleven({ onFinish }: Props) {
             <div className={styles.tower}>9</div>
             <div className={styles.tower}>11</div>
           </div>
+          {exploding && (
+            <>
+              <span className={`${styles.explosion} ${styles.explosionA}`}>💥</span>
+              <span className={`${styles.explosion} ${styles.explosionB}`}>💥</span>
+              <span className={`${styles.explosion} ${styles.explosionC}`}>💥</span>
+              <span className={`${styles.explosion} ${styles.explosionD}`}>💥</span>
+            </>
+          )}
           <div className={styles.planeRight}>
             <span className={styles.flipped}>✈️</span>
           </div>

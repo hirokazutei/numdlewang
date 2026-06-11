@@ -79,6 +79,30 @@
   transform: scaleX(-1);
 }
 
+/* ── Explosions ─────────────────────────────────────── */
+
+.explosion {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  animation: explode 1.1s ease-out forwards;
+}
+
+@keyframes explode {
+  0%   { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  20%  { opacity: 1; transform: scale(1.8) rotate(15deg); }
+  60%  { opacity: 1; transform: scale(2.4) rotate(-10deg); }
+  100% { opacity: 0; transform: scale(3.0) translateY(-24px) rotate(5deg); }
+}
+
+/* Left tower (9) — first impact */
+.explosionA { font-size: 3.5rem; left: 35%; top: 28%; animation-delay: 0s; }
+.explosionB { font-size: 2rem;   left: 30%; top: 18%; animation-delay: 0.15s; }
+
+/* Right tower (11) — second impact (0.5s delay matches plane animation) */
+.explosionC { font-size: 3.5rem; right: 35%; top: 18%; animation-delay: 0.5s; }
+.explosionD { font-size: 2rem;   right: 29%; top: 8%;  animation-delay: 0.65s; }
+
 .taunt {
   position: absolute;
   top: 12px;
