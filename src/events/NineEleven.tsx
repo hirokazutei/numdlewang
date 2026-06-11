@@ -7,16 +7,24 @@ interface Props {
 
 export function NineEleven({ onFinish }: Props) {
   const [phase, setPhase] = useState<"flying" | "memorial">("flying");
+  const [taunt, setTaunt] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setPhase("memorial"), 3200);
     return () => clearTimeout(t);
   }, []);
 
+  function handleSceneClick() {
+    if (phase !== "flying") return;
+    setTaunt(true);
+    setTimeout(() => setTaunt(false), 1800);
+  }
+
   return (
     <div className={styles.page}>
       {phase === "flying" && (
-        <div className={styles.scene}>
+        <div className={styles.scene} onClick={handleSceneClick}>
+          {taunt && <div className={styles.taunt}>You cannot change the past!</div>}
           <div className={styles.planeLeft}>✈️</div>
           <div className={styles.towers}>
             <div className={styles.tower}>9</div>

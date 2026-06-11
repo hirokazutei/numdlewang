@@ -21,14 +21,10 @@
   align-items: center;
 }
 
-@keyframes bobUp {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-32px); }
-}
-
-@keyframes bobDown {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(32px); }
+/* Both numbers travel the same ±28px range, offset by half a period */
+@keyframes bob {
+  0%, 100% { transform: translateY(-28px); }
+  50%       { transform: translateY(28px); }
 }
 
 .choice {
@@ -48,9 +44,9 @@
 .choice:hover:not(:disabled) { border-color: #a78bfa; background: #26263a; }
 .choice:disabled { cursor: default; }
 
-/* Alternating bob: one goes up, the other goes down */
-.bobA { animation: bobUp   0.75s ease-in-out infinite; }
-.bobB { animation: bobDown 0.75s ease-in-out infinite; }
+/* Half-period offset: when 6 is at top, 7 is at bottom */
+.bobA { animation: bob 0.75s ease-in-out infinite; }
+.bobB { animation: bob 0.75s ease-in-out infinite 0.375s; }
 
 .selected { border-color: #a78bfa !important; background: #2d1f5e !important; }
 .dimmed   { opacity: 0.3; }
