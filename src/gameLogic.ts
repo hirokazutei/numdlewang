@@ -1,6 +1,7 @@
 import { createRng } from "./seed";
 
 export type SymbolType = "number" | "math" | "letter" | "hieroglyph" | "food";
+export type SpecialEventType = "nundle-storm" | "enter-number" | "voice" | "take-picture" | "helpful-knower" | "wanganum";
 
 export interface GuessItem {
   type: SymbolType;
@@ -9,10 +10,14 @@ export interface GuessItem {
 
 export interface Round {
   guesses: GuessItem[];
-  // For exactly 2 guesses: which index is the correct one (player's pick determines outcome).
-  // For 1 or 3+ guesses: null — outcome is seeded 50/50 regardless of pick.
   correctIndex: number | null;
   seededCorrect: boolean;
+  // Special event fields (present when specialEvent is set)
+  specialEvent?: SpecialEventType;
+  stormNumbers?: GuessItem[];   // nundle-storm: the pool of numbers
+  wanganumDuration?: number;    // wanganum: ms until auto-win (5000–180000)
+  knowerHint?: number;          // helpful-knower: index the finger points to
+  eventWin?: boolean;           // voice/take-picture: seeded 80% win
 }
 
 export interface GameConfig {
@@ -134,7 +139,30 @@ export function buildGameConfig(dateStr: string): GameConfig {
     }
     const correctIndex = guessCount === 2 ? (rng() < 0.5 ? 0 : 1) : null;
     const seededCorrect = guessCount !== 2 ? rng() < 0.5 : false;
-    rounds.push({ guesses, correctIndex, seededCorrect });
+
+    // 5% chance of a special event — equal probability among 6 types
+    let specialEvent: SpecialEventType | undefined;
+    let stormNumbers: GuessItem[] | undefined;
+    let wanganumDuration: number | undefined;
+    let knowerHint: number | undefined;
+    let eventWin: boolean | undefined;
+
+    if (rng() < 0.05) {
+      const EVENTS: SpecialEventType[] = ["nundle-storm", "enter-number", "voice", "take-picture", "helpful-knower", "wanganum"];
+      specialEvent = EVENTS[Math.floor(rng() * EVENTS.length)];
+      if (specialEvent === "nundle-storm") {
+        const count = 15 + Math.floor(rng() * 11); // 15–25 numbers
+        stormNumbers = Array.from({ length: count }, () => ({ type: "number" as const, value: makeNumberValue(rng) }));
+      } else if (specialEvent === "wanganum") {
+        wanganumDuration = 5000 + Math.floor(rng() * 175001); // 5s–3min
+      } else if (specialEvent === "helpful-knower") {
+        knowerHint = Math.floor(rng() * Math.max(guesses.length, 1));
+      } else if (specialEvent === "voice" || specialEvent === "take-picture") {
+        eventWin = rng() < 0.8;
+      }
+    }
+
+    rounds.push({ guesses, correctIndex, seededCorrect, specialEvent, stormNumbers, wanganumDuration, knowerHint, eventWin });
   }
 
   const scoreGlitch = rng() < 0.1;

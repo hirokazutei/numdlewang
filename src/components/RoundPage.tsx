@@ -1,6 +1,13 @@
 import { useState } from "react";
 import confetti from "canvas-confetti";
-import type { Round } from "../gameLogic";
+import type { Round, SpecialEventType } from "../gameLogic";
+import { createRng } from "../seed";
+import { NundleStorm } from "../events/NundleStorm";
+import { EnterNumber } from "../events/EnterNumber";
+import { VoiceEvent } from "../events/VoiceEvent";
+import { TakePicture } from "../events/TakePicture";
+import { HelpfulKnower } from "../events/HelpfulKnower";
+import { Wanganum } from "../events/Wanganum";
 import styles from "./RoundPage.module.css";
 
 interface Props {
@@ -8,6 +15,7 @@ interface Props {
   index: number;
   total: number;
   onAdvance: (correct: boolean) => void;
+  forcedEvent?: SpecialEventType | null;
 }
 
 const TYPE_CLASS: Record<string, string> = {
@@ -23,68 +31,106 @@ function resolveCorrect(round: Round, chosen: number): boolean {
   return round.seededCorrect;
 }
 
-export function RoundPage({ round, index, total, onAdvance }: Props) {
+// Build a dev-friendly version of the round for a forced event
+function applyForcedEvent(round: Round, eventType: SpecialEventType): Round {
+  const rng = createRng("dev-" + eventType);
+  const base = { ...round, specialEvent: eventType };
+  switch (eventType) {
+    case "nundle-storm":
+      return { ...base, stormNumbers: Array.from({ length: 20 }, () => ({ type: "number" as const, value: String(Math.floor(rng() * 999) + 1) })) };
+    case "wanganum":
+      return { ...base, wanganumDuration: 8000 }; // 8s in dev mode
+    case "helpful-knower":
+      return { ...base, knowerHint: 0 };
+    case "voice":
+    case "take-picture":
+      return { ...base, eventWin: rng() < 0.8 };
+    default:
+      return base;
+  }
+}
+
+export function RoundPage({ round, index, total, onAdvance, forcedEvent }: Props) {
   const [chosen, setChosen] = useState<number | null>(null);
   const [correct, setCorrect] = useState<boolean | null>(null);
   const [advancing, setAdvancing] = useState(false);
 
+  const effectiveRound = forcedEvent ? applyForcedEvent(round, forcedEvent) : round;
+  const eventType = effectiveRound.specialEvent;
+
+  function handleAdvance(result: boolean) {
+    setAdvancing(true);
+    setTimeout(() => onAdvance(result), 420);
+  }
+
   function handlePick(i: number) {
     if (chosen !== null) return;
-    const result = resolveCorrect(round, i);
+    const result = resolveCorrect(effectiveRound, i);
     setChosen(i);
     setCorrect(result);
-
-    if (result) {
-      confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.55 },
-        colors: ["#a78bfa", "#34d399", "#fbbf24", "#f87171", "#60a5fa"],
-      });
-    }
-
-    setTimeout(() => {
-      setAdvancing(true);
-      setTimeout(() => onAdvance(result), 420);
-    }, 1400);
+    if (result) confetti({ particleCount: 120, spread: 80, origin: { y: 0.55 }, colors: ["#a78bfa", "#34d399", "#fbbf24", "#f87171", "#60a5fa"] });
+    setTimeout(() => { setAdvancing(true); setTimeout(() => onAdvance(result), 420); }, 1400);
   }
 
   const revealed = chosen !== null;
   const won = revealed && correct === true;
   const lost = revealed && correct === false;
-  const manyGuesses = round.guesses.length > 2;
+  const manyGuesses = effectiveRound.guesses.length > 2;
 
   return (
     <div className={`${styles.page} ${advancing ? styles.rotateOut : styles.rotateIn}`}>
-      {/* .inner uses margin:auto to center when short, scrolls naturally when tall */}
       <div className={styles.inner}>
-        <div className={`${styles.result} ${won ? styles.won : ""} ${lost ? styles.lost : ""}`}>
-          {!revealed && <span className={styles.prompt}>Pick a number</span>}
-          {won && <span>numdlewang! 🎉</span>}
-          {lost && <span>numblewrong. :(</span>}
-        </div>
 
-        <div className={`${styles.tokens} ${manyGuesses ? styles.tokensMany : ""}`}>
-          {round.guesses.map((g, i) => (
-            <button
-              key={i}
-              className={`
-                ${styles.token}
-                ${TYPE_CLASS[g.type] ?? ""}
-                ${chosen === i ? styles.selected : ""}
-                ${revealed && chosen !== i ? styles.dimmed : ""}
-              `}
-              onClick={() => handlePick(i)}
-              disabled={revealed}
-            >
-              {g.value}
-            </button>
-          ))}
-        </div>
+        {/* ── Special events ───────────────────────────────────── */}
+        {eventType === "nundle-storm" && (
+          <NundleStorm round={effectiveRound} onFinish={handleAdvance} />
+        )}
+        {eventType === "enter-number" && (
+          <EnterNumber round={effectiveRound} onFinish={handleAdvance} />
+        )}
+        {eventType === "voice" && (
+          <VoiceEvent round={effectiveRound} onFinish={handleAdvance} />
+        )}
+        {eventType === "take-picture" && (
+          <TakePicture round={effectiveRound} onFinish={handleAdvance} />
+        )}
+        {eventType === "helpful-knower" && (
+          <HelpfulKnower round={effectiveRound} onFinish={handleAdvance} />
+        )}
+        {eventType === "wanganum" && (
+          <Wanganum duration={effectiveRound.wanganumDuration ?? 8000} onFinish={handleAdvance} />
+        )}
 
-        <div className={styles.progress}>
-          Round {index + 1} / {total}
-        </div>
+        {/* ── Normal round ─────────────────────────────────────── */}
+        {!eventType && (
+          <>
+            <div className={`${styles.result} ${won ? styles.won : ""} ${lost ? styles.lost : ""}`}>
+              {!revealed && <span className={styles.prompt}>Pick a number</span>}
+              {won && <span>numdlewang! 🎉</span>}
+              {lost && <span>numblewrong. :(</span>}
+            </div>
+
+            <div className={`${styles.tokens} ${manyGuesses ? styles.tokensMany : ""}`}>
+              {effectiveRound.guesses.map((g, i) => (
+                <button
+                  key={i}
+                  className={`${styles.token} ${TYPE_CLASS[g.type] ?? ""} ${chosen === i ? styles.selected : ""} ${revealed && chosen !== i ? styles.dimmed : ""}`}
+                  onClick={() => handlePick(i)}
+                  disabled={revealed}
+                >
+                  {g.value}
+                </button>
+              ))}
+            </div>
+
+            <div className={styles.progress}>Round {index + 1} / {total}</div>
+          </>
+        )}
+
+        {/* Show progress for special events too */}
+        {eventType && (
+          <div className={styles.progress}>Round {index + 1} / {total}</div>
+        )}
       </div>
     </div>
   );

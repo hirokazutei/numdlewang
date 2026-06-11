@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { buildGameConfig } from "./gameLogic";
+import { buildGameConfig, type SpecialEventType } from "./gameLogic";
 import { getDateString, getPuzzleNumber } from "./seed";
 import { loadCookie, saveCookie } from "./cookie";
 import { RoundPage } from "./components/RoundPage";
@@ -25,6 +25,7 @@ export default function App() {
   const [results, setResults] = useState<boolean[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [done, setDone] = useState(false);
+  const [devForceEvent, setDevForceEvent] = useState<SpecialEventType | null>(null);
 
   const config = buildGameConfig(seed);
 
@@ -99,12 +100,26 @@ export default function App() {
       </header>
 
       {DEV && (
-        <div className="dev-bar">
-          <span className="dev-seed">seed: <code>{seed}</code></span>
-          <button className="dev-btn" onClick={() => resetGame(randomSeed())}>🎲 Roll</button>
-          <button className="dev-btn" onClick={() => resetGame(getDateString())}>📅 Today</button>
-          {done && <button className="dev-btn" onClick={() => resetGame(seed)}>↺ Replay</button>}
-        </div>
+        <>
+          <div className="dev-bar">
+            <span className="dev-seed">seed: <code>{seed}</code></span>
+            <button className="dev-btn" onClick={() => resetGame(randomSeed())}>🎲 Roll</button>
+            <button className="dev-btn" onClick={() => resetGame(getDateString())}>📅 Today</button>
+            {done && <button className="dev-btn" onClick={() => resetGame(seed)}>↺ Replay</button>}
+          </div>
+          <div className="dev-bar dev-events">
+            <span className="dev-seed">force event:</span>
+            {(["nundle-storm", "enter-number", "voice", "take-picture", "helpful-knower", "wanganum"] as SpecialEventType[]).map(e => (
+              <button
+                key={e}
+                className={`dev-btn ${devForceEvent === e ? "dev-btn-active" : ""}`}
+                onClick={() => setDevForceEvent(devForceEvent === e ? null : e)}
+              >
+                {e === "nundle-storm" ? "⚡Storm" : e === "enter-number" ? "✏️Enter" : e === "voice" ? "🎤Voice" : e === "take-picture" ? "📷Camera" : e === "helpful-knower" ? "👉Knower" : "🌀Wang"}
+              </button>
+            ))}
+          </div>
+        </>
       )}
 
       <main className="main">
@@ -112,11 +127,12 @@ export default function App() {
           <ResultsScreen config={config} puzzleNumber={puzzleNumber} results={results} isPastPuzzle={isPastPuzzle} />
         ) : round ? (
           <RoundPage
-            key={`${seed}-${currentRound}`}
+            key={`${seed}-${currentRound}-${devForceEvent ?? ""}`}
             round={round}
             index={currentRound}
             total={config.roundCount}
             onAdvance={handleAdvance}
+            forcedEvent={DEV ? devForceEvent : null}
           />
         ) : null}
       </main>

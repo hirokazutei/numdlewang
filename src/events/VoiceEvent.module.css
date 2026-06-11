@@ -1,0 +1,40 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 16px;
+  width: 100%;
+}
+
+.title  { font-size: 1.6rem; font-weight: bold; color: #60a5fa; letter-spacing: 0.06em; }
+.prompt { color: #888; font-size: 0.95rem; text-align: center; margin: 0; }
+.icon   { font-size: 3.5rem; }
+
+.pulse { animation: beat 0.8s ease-in-out infinite; }
+@keyframes beat { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+
+.waves {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 32px;
+}
+.waves span {
+  width: 5px;
+  background: #60a5fa;
+  border-radius: 3px;
+  animation: wave 0.6s ease-in-out infinite alternate;
+}
+.waves span:nth-child(1) { animation-delay: 0s;    height: 40%; }
+.waves span:nth-child(2) { animation-delay: 0.1s;  height: 60%; }
+.waves span:nth-child(3) { animation-delay: 0.2s;  height: 100%; }
+.waves span:nth-child(4) { animation-delay: 0.1s;  height: 60%; }
+.waves span:nth-child(5) { animation-delay: 0s;    height: 40%; }
+@keyframes wave { from { transform: scaleY(1); } to { transform: scaleY(2.5); } }
+
+.heard  { color: #aaa; font-size: 1.1rem; margin: 0; }
+.denied { color: #f87171; font-size: 1rem; margin: 0; }
+
+.won  { font-size: 1.8rem; font-weight: bold; color: #34d399; }
+.lost { font-size: 1.8rem; font-weight: bold; color: #f87171; }

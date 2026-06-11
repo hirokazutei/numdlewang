@@ -97,9 +97,15 @@ body {
   transition: background 0.15s;
 }
 
-.dev-btn:hover {
-  background: #6d28d9;
+.dev-btn:hover { background: #6d28d9; }
+
+.dev-btn-active {
+  background: #7c3aed !important;
+  border-color: #a78bfa !important;
+  color: #fff;
 }
+
+.dev-events { flex-wrap: wrap; }
 
 .rounds {
   display: flex;

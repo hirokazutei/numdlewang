@@ -1,0 +1,60 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 16px;
+  width: 100%;
+}
+
+.title  { font-size: 1.6rem; font-weight: bold; color: #34d399; letter-spacing: 0.06em; }
+.prompt { color: #888; font-size: 0.95rem; text-align: center; margin: 0; }
+.icon   { font-size: 3.5rem; }
+
+.btn {
+  padding: 12px 36px;
+  background: #065f46;
+  color: #34d399;
+  border: 2px solid #34d399;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn:hover { background: #064e3b; }
+
+.videoWrap {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #34d399;
+}
+
+.video {
+  width: 100%;
+  display: block;
+  transform: scaleX(-1); /* mirror */
+}
+
+.caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.captionWin  { background: rgba(52, 211, 153, 0.85); color: #0d0d1a; }
+.captionLose { background: rgba(248, 113, 113, 0.85); color: #0d0d1a; }
+
+.denied { color: #f87171; font-size: 1rem; margin: 0; }
+.lost   { font-size: 1.8rem; font-weight: bold; color: #f87171; }
