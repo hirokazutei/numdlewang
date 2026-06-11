@@ -2,7 +2,7 @@ const COOKIE_NAME = "numdlewang_result";
 
 export interface CookieData {
   date: string;
-  results: boolean[];
+  results: (boolean | "neutral")[];
   seen: boolean;
 }
 

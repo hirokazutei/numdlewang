@@ -22,7 +22,7 @@ function randomSeed(): string {
 export default function App() {
   const [screen, setScreen] = useState<"landing" | "game">("landing");
   const [seed, setSeed] = useState(getInitialSeed);
-  const [results, setResults] = useState<boolean[]>([]);
+  const [results, setResults] = useState<(boolean | "neutral")[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [done, setDone] = useState(false);
   const [devForceEvent, setDevForceEvent] = useState<SpecialEventType | null>(null);
@@ -63,7 +63,7 @@ export default function App() {
     }
   }, [seed]);
 
-  function handleAdvance(correct: boolean) {
+  function handleAdvance(correct: boolean | "neutral") {
     const next = [...results, correct];
     setResults(next);
     const isLast = next.length === config.roundCount;
@@ -110,13 +110,13 @@ export default function App() {
           </div>
           <div className="dev-bar dev-events">
             <span className="dev-seed">force event:</span>
-            {(["nundle-storm", "enter-number", "voice", "take-picture", "helpful-knower", "wanganum"] as SpecialEventType[]).map(e => (
+            {(["nundle-storm", "enter-number", "voice", "take-picture", "helpful-knower", "wanganum", "curse-of-ra"] as SpecialEventType[]).map(e => (
               <button
                 key={e}
                 className={`dev-btn ${devForceEvent === e ? "dev-btn-active" : ""}`}
                 onClick={() => setDevForceEvent(devForceEvent === e ? null : e)}
               >
-                {e === "nundle-storm" ? "⚡ Storm" : e === "enter-number" ? "✏️ Enter" : e === "voice" ? "🎤 Voice" : e === "take-picture" ? "📷 Camera" : e === "helpful-knower" ? "👉 Knower" : "🌀 Wang"}
+                {e === "nundle-storm" ? "⚡ Storm" : e === "enter-number" ? "✏️ Enter" : e === "voice" ? "🎤 Voice" : e === "take-picture" ? "📷 Camera" : e === "helpful-knower" ? "👉 Knower" : e === "wanganum" ? "🌀 Wang" : "☥ Ra"}
               </button>
             ))}
           </div>

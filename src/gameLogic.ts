@@ -1,7 +1,7 @@
 import { createRng } from "./seed";
 
 export type SymbolType = "number" | "math" | "letter" | "hieroglyph" | "food";
-export type SpecialEventType = "nundle-storm" | "enter-number" | "voice" | "take-picture" | "helpful-knower" | "wanganum";
+export type SpecialEventType = "nundle-storm" | "enter-number" | "voice" | "take-picture" | "helpful-knower" | "wanganum" | "curse-of-ra";
 
 export interface GuessItem {
   type: SymbolType;
@@ -150,7 +150,7 @@ export function buildGameConfig(dateStr: string): GameConfig {
     let knowerDirection: "top" | "right" | "bottom" | "left" | undefined;
     let eventWin: boolean | undefined;
 
-    if (rng() < 0.24) {
+    if (rng() < 0.26) {
       const W: Array<[SpecialEventType, number]> = [
         ["nundle-storm",   2],
         ["enter-number",   5],
@@ -158,14 +158,15 @@ export function buildGameConfig(dateStr: string): GameConfig {
         ["take-picture",   5],
         ["helpful-knower", 5],
         ["wanganum",       2],
+        ["curse-of-ra",    2],
       ];
-      const r = rng() * 24;
+      const r = rng() * 26;
       let acc = 0;
       for (const [type, weight] of W) {
         acc += weight;
         if (r < acc) { specialEvent = type; break; }
       }
-      specialEvent ??= "wanganum";
+      specialEvent ??= "curse-of-ra";
       if (specialEvent === "nundle-storm") {
         const count = 15 + Math.floor(rng() * 11);
         stormNumbers = Array.from({ length: count }, () => makeGuessItem(rng));

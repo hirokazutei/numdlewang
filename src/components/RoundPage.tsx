@@ -8,13 +8,14 @@ import { VoiceEvent } from "../events/VoiceEvent";
 import { TakePicture } from "../events/TakePicture";
 import { HelpfulKnower } from "../events/HelpfulKnower";
 import { Wanganum } from "../events/Wanganum";
+import { CurseOfRa } from "../events/CurseOfRa";
 import styles from "./RoundPage.module.css";
 
 interface Props {
   round: Round;
   index: number;
   total: number;
-  onAdvance: (correct: boolean) => void;
+  onAdvance: (result: boolean | "neutral") => void;
   forcedEvent?: SpecialEventType | null;
   onRotateStart?: () => void;
   onRotateEnd?: () => void;
@@ -52,7 +53,9 @@ function applyForcedEvent(round: Round, eventType: SpecialEventType): Round {
     }
     case "voice":
     case "take-picture":
-      return { ...base, eventWin: true }; // always win in dev for easy testing
+      return { ...base, eventWin: true };
+    case "curse-of-ra":
+      return base;
     default:
       return base;
   }
@@ -66,7 +69,7 @@ export function RoundPage({ round, index, total, onAdvance, forcedEvent, onRotat
   const effectiveRound = forcedEvent ? applyForcedEvent(round, forcedEvent) : round;
   const eventType = effectiveRound.specialEvent;
 
-  function handleAdvance(result: boolean) {
+  function handleAdvance(result: boolean | "neutral") {
     setAdvancing(true);
     setTimeout(() => onAdvance(result), 420);
   }
@@ -141,8 +144,12 @@ export function RoundPage({ round, index, total, onAdvance, forcedEvent, onRotat
           </>
         )}
 
-        {/* Show progress for special events too */}
-        {eventType && (
+        {eventType === "curse-of-ra" && (
+          <CurseOfRa onFinish={handleAdvance} />
+        )}
+
+        {/* Show progress for non-fullscreen special events */}
+        {eventType && eventType !== "wanganum" && eventType !== "curse-of-ra" && (
           <div className={styles.progress}>Round {index + 1} / {total}</div>
         )}
       </div>
