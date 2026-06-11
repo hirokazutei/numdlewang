@@ -76,7 +76,7 @@ export function HelpfulKnower({ round, onFinish }: Props) {
             <button
               className={`${styles.token} ${chosen === i ? styles.selected : ""} ${chosen !== null && chosen !== i ? styles.dimmed : ""}`}
               onClick={() => handlePick(i)}
-              disabled={chosen !== null}
+              disabled={!showKnower || chosen !== null}
             >
               {g.value}
             </button>
