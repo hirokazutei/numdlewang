@@ -21,49 +21,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  text-align: center;
-  padding: 32px 40px;
-  background: rgba(13, 13, 26, 0.65);
+  padding: 24px 40px;
+  background: rgba(13, 13, 26, 0.6);
   border: 1px solid rgba(245, 197, 66, 0.3);
   border-radius: 16px;
   backdrop-filter: blur(4px);
 }
 
 .title {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
   letter-spacing: 0.12em;
   color: #f5c542;
   text-shadow: 0 0 20px rgba(245, 197, 66, 0.6);
   font-family: "Noto Sans Egyptian Hieroglyphs", 'Courier New', monospace;
   animation: glow 1.5s ease-in-out infinite alternate;
+  white-space: nowrap;
 }
 
 @keyframes glow {
   from { text-shadow: 0 0 10px rgba(245, 197, 66, 0.4); }
   to   { text-shadow: 0 0 30px rgba(245, 197, 66, 0.9), 0 0 60px rgba(245, 197, 66, 0.4); }
-}
-
-.subtitle {
-  font-size: 0.85rem;
-  color: rgba(245, 197, 66, 0.6);
-  letter-spacing: 0.1em;
-}
-
-.countdown {
-  font-size: 4rem;
-  font-weight: bold;
-  font-family: monospace;
-  color: #f5c542;
-  line-height: 1;
-  min-width: 2ch;
-  text-align: center;
-}
-
-.note {
-  font-size: 0.75rem;
-  color: #888;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }

@@ -181,7 +181,7 @@ export function buildGameConfig(dateStr: string): GameConfig {
       }
     }
 
-    rounds.push({ guesses, correctIndex, seededCorrect, specialEvent, stormNumbers, wanganumDuration, knowerHint, eventWin });
+    rounds.push({ guesses, correctIndex, seededCorrect, specialEvent, stormNumbers, wanganumDuration, knowerHint, knowerDirection, eventWin });
   }
 
   const scoreGlitch = rng() < 0.1;
