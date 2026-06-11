@@ -9,21 +9,26 @@ interface Props {
   onFinish: (correct: boolean) => void;
 }
 
+type NumItem = { value: string; uid: number };
+
+function randomNum(): string {
+  return String(1 + Math.floor(Math.random() * 9998));
+}
+
 export function NundleStorm({ round, onFinish }: Props) {
-  const numbers = round.stormNumbers ?? round.guesses;
-  const [visible, setVisible] = useState(() => new Set(numbers.map((_, i) => i)));
+  const initial = (round.stormNumbers ?? round.guesses).map((g, i) => ({ value: g.value, uid: i }));
+  const [nums, setNums] = useState<NumItem[]>(initial);
+  const [uidCounter, setUidCounter] = useState(initial.length);
   const [timeLeft, setTimeLeft] = useState(10);
   const [result, setResult] = useState<boolean | null>(null);
 
   const finishedRef = useRef(false);
-  const clickedRef = useRef<number[]>([]);
-  const visibleRef = useRef(new Set(numbers.map((_, i) => i)));
+  const clickedValsRef = useRef<string[]>([]);
 
-  function resolve(clicked: number[]) {
+  function resolve(vals: string[]) {
     if (finishedRef.current) return;
     finishedRef.current = true;
-    const clickStr = clicked.map(i => numbers[i]?.value ?? i).join(",");
-    const correct = hashString(getDateString() + clickStr) % 2 === 0;
+    const correct = hashString(getDateString() + vals.join(",")) % 2 === 0;
     setResult(correct);
     if (correct) confetti({ particleCount: 100, spread: 80, origin: { y: 0.5 }, colors: ["#a78bfa", "#34d399", "#fbbf24"] });
     setTimeout(() => onFinish(correct), 1600);
@@ -32,7 +37,7 @@ export function NundleStorm({ round, onFinish }: Props) {
   useEffect(() => {
     const id = setInterval(() => {
       setTimeLeft(t => {
-        if (t <= 1) { clearInterval(id); resolve(clickedRef.current); return 0; }
+        if (t <= 1) { clearInterval(id); resolve(clickedValsRef.current); return 0; }
         return t - 1;
       });
     }, 1000);
@@ -40,13 +45,18 @@ export function NundleStorm({ round, onFinish }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleClick(i: number) {
-    if (finishedRef.current || !visibleRef.current.has(i)) return;
-    visibleRef.current.delete(i);
-    const newClicked = [...clickedRef.current, i];
-    clickedRef.current = newClicked;
-    setVisible(new Set(visibleRef.current));
-    if (visibleRef.current.size === 0) resolve(newClicked);
+  function handleClick(idx: number) {
+    if (finishedRef.current) return;
+    // Track the clicked value for win seed
+    clickedValsRef.current = [...clickedValsRef.current, nums[idx].value];
+    // Replace with a fresh random number
+    const newUid = uidCounter;
+    setUidCounter(c => c + 1);
+    setNums(prev => {
+      const next = [...prev];
+      next[idx] = { value: randomNum(), uid: newUid };
+      return next;
+    });
   }
 
   return (
@@ -56,15 +66,11 @@ export function NundleStorm({ round, onFinish }: Props) {
         {timeLeft}s
       </div>
       <div className={styles.grid}>
-        {numbers.map((g, i) =>
-          visible.has(i) ? (
-            <button key={i} className={styles.num} onClick={() => handleClick(i)}>
-              {g.value}
-            </button>
-          ) : (
-            <div key={i} className={styles.gone} />
-          )
-        )}
+        {nums.map((g, idx) => (
+          <button key={g.uid} className={styles.num} onClick={() => handleClick(idx)}>
+            {g.value}
+          </button>
+        ))}
       </div>
       {result !== null && (
         <div className={result ? styles.won : styles.lost}>

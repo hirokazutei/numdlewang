@@ -14,13 +14,12 @@ type Phase = "idle" | "listening" | "heard" | "denied";
 export function VoiceEvent({ round, onFinish }: Props) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [heardNumber, setHeardNumber] = useState("");
+  const [winner, setWinner] = useState<boolean | null>(null);
 
   async function startListening() {
     setPhase("listening");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-      // Try Web Speech Recognition if available
       const SR = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
       let resolved = false;
 
@@ -29,10 +28,11 @@ export function VoiceEvent({ round, onFinish }: Props) {
         resolved = true;
         stream.getTracks().forEach(t => t.stop());
         const rng = createRng(String(Date.now()));
-        const n = String(Math.floor(rng() * 9999));
-        setHeardNumber(n);
-        setPhase("heard");
+        setHeardNumber(String(Math.floor(rng() * 9999)));
+        // eventWin is 80% seeded; default true so voice always has a fair chance
         const correct = round.eventWin ?? true;
+        setWinner(correct);
+        setPhase("heard");
         if (correct) confetti({ particleCount: 100, spread: 70, origin: { y: 0.5 }, colors: ["#a78bfa", "#34d399", "#fbbf24"] });
         setTimeout(() => onFinish(correct), 2000);
       }
@@ -44,9 +44,9 @@ export function VoiceEvent({ round, onFinish }: Props) {
         recognition.onerror = finish;
         recognition.onend = finish;
         recognition.start();
-        setTimeout(finish, 4000); // timeout after 4s
+        setTimeout(finish, 4000);
       } else {
-        setTimeout(finish, 2500); // no SR, just wait
+        setTimeout(finish, 2500);
       }
     } catch {
       setPhase("denied");
@@ -68,7 +68,7 @@ export function VoiceEvent({ round, onFinish }: Props) {
 
       {phase === "listening" && (
         <>
-          <div className={styles.icon + " " + styles.pulse}>🎤</div>
+          <div className={`${styles.icon} ${styles.pulse}`}>🎤</div>
           <p className={styles.prompt}>Listening…</p>
           <div className={styles.waves}>
             <span /><span /><span /><span /><span />
@@ -76,12 +76,12 @@ export function VoiceEvent({ round, onFinish }: Props) {
         </>
       )}
 
-      {phase === "heard" && (
+      {phase === "heard" && winner !== null && (
         <>
           <div className={styles.icon}>🎤</div>
           <p className={styles.heard}>I heard… <strong>{heardNumber}</strong></p>
-          <div className={round.eventWin ? styles.won : styles.lost}>
-            {round.eventWin ? "numdlewang! 🎉" : "numblewrong. :("}
+          <div className={winner ? styles.won : styles.lost}>
+            {winner ? "numdlewang! 🎉" : "numblewrong. :("}
           </div>
         </>
       )}

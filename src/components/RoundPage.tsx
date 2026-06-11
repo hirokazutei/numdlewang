@@ -41,10 +41,10 @@ function applyForcedEvent(round: Round, eventType: SpecialEventType): Round {
     case "wanganum":
       return { ...base, wanganumDuration: 8000 }; // 8s in dev mode
     case "helpful-knower":
-      return { ...base, knowerHint: 0 };
+      return { ...base, knowerHint: 0, knowerDirection: "left" as const };
     case "voice":
     case "take-picture":
-      return { ...base, eventWin: rng() < 0.8 };
+      return { ...base, eventWin: true }; // always win in dev for easy testing
     default:
       return base;
   }
@@ -98,7 +98,11 @@ export function RoundPage({ round, index, total, onAdvance, forcedEvent }: Props
           <HelpfulKnower round={effectiveRound} onFinish={handleAdvance} />
         )}
         {eventType === "wanganum" && (
-          <Wanganum duration={effectiveRound.wanganumDuration ?? 8000} onFinish={handleAdvance} />
+          <Wanganum
+            duration={effectiveRound.wanganumDuration ?? 8000}
+            roundLabel={`Round ${index + 1} / ${total}`}
+            onFinish={handleAdvance}
+          />
         )}
 
         {/* ── Normal round ─────────────────────────────────────── */}

@@ -12,12 +12,12 @@ export interface Round {
   guesses: GuessItem[];
   correctIndex: number | null;
   seededCorrect: boolean;
-  // Special event fields (present when specialEvent is set)
   specialEvent?: SpecialEventType;
-  stormNumbers?: GuessItem[];   // nundle-storm: the pool of numbers
-  wanganumDuration?: number;    // wanganum: ms until auto-win (5000–180000)
-  knowerHint?: number;          // helpful-knower: index the finger points to
-  eventWin?: boolean;           // voice/take-picture: seeded 80% win
+  stormNumbers?: GuessItem[];
+  wanganumDuration?: number;
+  knowerHint?: number;
+  knowerDirection?: "top" | "right" | "bottom" | "left";
+  eventWin?: boolean;
 }
 
 export interface GameConfig {
@@ -147,16 +147,18 @@ export function buildGameConfig(dateStr: string): GameConfig {
     let knowerHint: number | undefined;
     let eventWin: boolean | undefined;
 
-    if (rng() < 0.05) {
+    if (rng() < 0.12) { // 12% total → 2% per event (6 types)
       const EVENTS: SpecialEventType[] = ["nundle-storm", "enter-number", "voice", "take-picture", "helpful-knower", "wanganum"];
       specialEvent = EVENTS[Math.floor(rng() * EVENTS.length)];
       if (specialEvent === "nundle-storm") {
-        const count = 15 + Math.floor(rng() * 11); // 15–25 numbers
+        const count = 15 + Math.floor(rng() * 11);
         stormNumbers = Array.from({ length: count }, () => ({ type: "number" as const, value: makeNumberValue(rng) }));
       } else if (specialEvent === "wanganum") {
-        wanganumDuration = 5000 + Math.floor(rng() * 175001); // 5s–3min
+        wanganumDuration = 5000 + Math.floor(rng() * 175001);
       } else if (specialEvent === "helpful-knower") {
         knowerHint = Math.floor(rng() * Math.max(guesses.length, 1));
+        const DIRS = ["top", "right", "bottom", "left"] as const;
+        knowerDirection = DIRS[Math.floor(rng() * DIRS.length)];
       } else if (specialEvent === "voice" || specialEvent === "take-picture") {
         eventWin = rng() < 0.8;
       }

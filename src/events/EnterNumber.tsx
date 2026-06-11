@@ -9,6 +9,29 @@ interface Props {
   onFinish: (correct: boolean) => void;
 }
 
+const SCRAMBLE = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%±∑∏√∂∫∞≈×÷αβγδφψω𓀀𓁿";
+
+function randomScramble() {
+  const len = 3 + Math.floor(Math.random() * 6);
+  return Array.from({ length: len }, () => SCRAMBLE[Math.floor(Math.random() * SCRAMBLE.length)]).join("");
+}
+
+function computedOutput(input: string): string {
+  const h = hashString(input + getDateString());
+  const outputs = [
+    String(h % 9000 + 1000),
+    `${(h % 100).toFixed(2)}%`,
+    `√${h % 999}`,
+    `∑(${h % 26})`,
+    `π×${h % 99}`,
+    `${h % 42}!`,
+    String.fromCodePoint(0x13000 + (h % 0xff)),
+    `e^${(h % 10) + 1}`,
+    `${h % 256} mod 7`,
+  ];
+  return outputs[h % outputs.length];
+}
+
 export function EnterNumber({ onFinish }: Props) {
   const [input, setInput] = useState("");
   const [displayValue, setDisplayValue] = useState("");
@@ -19,15 +42,14 @@ export function EnterNumber({ onFinish }: Props) {
   function handleSubmit() {
     if (phase !== "idle" || !input.trim()) return;
     setPhase("scrambling");
-
     let ticks = 0;
     intervalRef.current = setInterval(() => {
-      setDisplayValue(String(Math.floor(Math.random() * 99999)));
+      setDisplayValue(randomScramble());
       ticks++;
-      if (ticks >= 12) {
+      if (ticks >= 14) {
         clearInterval(intervalRef.current!);
         const correct = hashString(input + getDateString()) % 2 === 0;
-        setDisplayValue(String(hashString(input) % 9000 + 1000));
+        setDisplayValue(computedOutput(input));
         setResult(correct);
         setPhase("done");
         if (correct) confetti({ particleCount: 100, spread: 80, origin: { y: 0.5 }, colors: ["#a78bfa", "#34d399", "#fbbf24"] });
@@ -58,7 +80,7 @@ export function EnterNumber({ onFinish }: Props) {
       )}
 
       {phase === "scrambling" && (
-        <div className={styles.scrambling}>{displayValue || "..."}</div>
+        <div className={styles.scrambling}>{displayValue || "…"}</div>
       )}
 
       {phase === "done" && (

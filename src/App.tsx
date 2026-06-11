@@ -115,7 +115,7 @@ export default function App() {
                 className={`dev-btn ${devForceEvent === e ? "dev-btn-active" : ""}`}
                 onClick={() => setDevForceEvent(devForceEvent === e ? null : e)}
               >
-                {e === "nundle-storm" ? "⚡Storm" : e === "enter-number" ? "✏️Enter" : e === "voice" ? "🎤Voice" : e === "take-picture" ? "📷Camera" : e === "helpful-knower" ? "👉Knower" : "🌀Wang"}
+                {e === "nundle-storm" ? "⚡ Storm" : e === "enter-number" ? "✏️ Enter" : e === "voice" ? "🎤 Voice" : e === "take-picture" ? "📷 Camera" : e === "helpful-knower" ? "👉 Knower" : "🌀 Wang"}
               </button>
             ))}
           </div>
