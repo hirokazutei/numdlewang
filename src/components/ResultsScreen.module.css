@@ -1,0 +1,98 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 32px 16px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.wonMessage {
+  font-size: 2rem;
+  color: #fbbf24;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.score {
+  font-size: 1.4rem;
+  color: #a78bfa;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.fraction {
+  font-size: 2.6rem;
+  font-weight: bold;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.correctNum { color: #34d399; }
+.slash      { color: #888; }
+.totalNum   { color: #f87171; }
+.label      { font-size: 1rem; color: #888; margin-left: 8px; }
+
+.circles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 520px;
+}
+
+.filled {
+  font-size: 1.5rem;
+  color: #34d399;
+}
+
+.empty {
+  font-size: 1.5rem;
+  color: #f87171;
+}
+
+.overflow {
+  font-size: 1rem;
+  color: #888;
+  align-self: center;
+}
+
+.copyBtn {
+  padding: 12px 36px;
+  background: #6d28d9;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: background 0.2s;
+}
+
+.copyBtn:hover { background: #7c3aed; }
+
+.thanks {
+  color: #aaa;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.timer {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.time {
+  color: #fbbf24;
+  font-family: monospace;
+  font-size: 1.05rem;
+}

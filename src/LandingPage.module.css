@@ -1,0 +1,207 @@
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  position: relative;
+  overflow: hidden;
+  background: #0d0d1a;
+}
+
+/* ── Spinning rings ─────────────────────────────────────── */
+
+.ringSvg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 1600px;
+  height: 1600px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+@keyframes spin-cw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spin-ccw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+.ringCw {
+  transform-origin: 0 0;
+  animation: spin-cw var(--ring-duration, 60s) linear infinite;
+}
+
+.ringCcw {
+  transform-origin: 0 0;
+  animation: spin-ccw var(--ring-duration, 60s) linear infinite;
+}
+
+/* ── Title block ────────────────────────────────────────── */
+
+.titleBlock {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  transform: rotate(-3deg);
+  /* Non-constant pulse: sine-curve easing via cubic-bezier */
+  animation: pulse 3.2s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+@keyframes pulse {
+  0%   { transform: rotate(-3deg) scale(1.00); }
+  50%  { transform: rotate(-3deg) scale(1.07); }
+  100% { transform: rotate(-3deg) scale(1.00); }
+}
+
+/* ── "Welcome to" language line ─────────────────────────── */
+
+.welcome {
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  color: #888;
+  font-family: 'Courier New', monospace;
+  min-height: 1.6em;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.welcomeVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.welcomeHidden {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* ── "numdlewang" ────────────────────────────────────────── */
+
+.gameTitle {
+  font-size: 3.5rem;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 0.08em;
+  animation: colorCycle 7s linear infinite;
+  line-height: 1;
+}
+
+@keyframes colorCycle {
+  0%   { color: #a78bfa; }
+  20%  { color: #60a5fa; }
+  40%  { color: #34d399; }
+  60%  { color: #fbbf24; }
+  80%  { color: #f87171; }
+  100% { color: #a78bfa; }
+}
+
+/* ── Play button ─────────────────────────────────────────── */
+
+.playBtn {
+  position: relative;
+  z-index: 1;
+  padding: 14px 56px;
+  background: transparent;
+  color: #a78bfa;
+  border: 2px solid #a78bfa;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.playBtn:hover {
+  background: #a78bfa;
+  color: #0d0d1a;
+  transform: scale(1.04);
+}
+
+.playBtn:active {
+  transform: scale(0.97);
+}
+
+/* ── Past puzzles ────────────────────────────────────────── */
+
+.pastBtn {
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 4px 8px;
+}
+
+.pastBtn:hover {
+  color: #a78bfa;
+}
+
+.datePicker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dateInput {
+  background: #1a1a2e;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  cursor: pointer;
+  outline: none;
+  color-scheme: dark;
+}
+
+.dateInput:focus {
+  border-color: #a78bfa;
+}
+
+.goBtn {
+  padding: 6px 18px;
+  background: #6d28d9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.goBtn:hover { background: #7c3aed; }
+
+.cancelBtn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.15s;
+}
+
+.cancelBtn:hover { color: #f87171; }

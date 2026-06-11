@@ -1,0 +1,39 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.token {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  background: #1e1e2e;
+  border: 2px solid #444;
+  color: #e0e0e0;
+  letter-spacing: 0.02em;
+}
+
+.hieroglyph {
+  font-family: "Noto Sans Egyptian Hieroglyphs", serif;
+  font-size: 1.6rem;
+  color: #f5c542;
+  border-color: #f5c542;
+}
+
+.math {
+  color: #a78bfa;
+  border-color: #a78bfa;
+  font-size: 1.6rem;
+}
+
+.letter {
+  color: #34d399;
+  border-color: #34d399;
+}
