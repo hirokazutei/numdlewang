@@ -140,16 +140,32 @@ export function buildGameConfig(dateStr: string): GameConfig {
     const correctIndex = guessCount === 2 ? (rng() < 0.5 ? 0 : 1) : null;
     const seededCorrect = guessCount !== 2 ? rng() < 0.5 : false;
 
-    // 5% chance of a special event — equal probability among 6 types
+    // Weighted special event selection:
+    //   nundle-storm: 2%, enter-number: 5%, voice: 5%,
+    //   take-picture: 5%, helpful-knower: 5%, wanganum: 2%  → 24% total
     let specialEvent: SpecialEventType | undefined;
     let stormNumbers: GuessItem[] | undefined;
     let wanganumDuration: number | undefined;
     let knowerHint: number | undefined;
+    let knowerDirection: "top" | "right" | "bottom" | "left" | undefined;
     let eventWin: boolean | undefined;
 
-    if (rng() < 0.12) { // 12% total → 2% per event (6 types)
-      const EVENTS: SpecialEventType[] = ["nundle-storm", "enter-number", "voice", "take-picture", "helpful-knower", "wanganum"];
-      specialEvent = EVENTS[Math.floor(rng() * EVENTS.length)];
+    if (rng() < 0.24) {
+      const W: Array<[SpecialEventType, number]> = [
+        ["nundle-storm",   2],
+        ["enter-number",   5],
+        ["voice",          5],
+        ["take-picture",   5],
+        ["helpful-knower", 5],
+        ["wanganum",       2],
+      ];
+      const r = rng() * 24;
+      let acc = 0;
+      for (const [type, weight] of W) {
+        acc += weight;
+        if (r < acc) { specialEvent = type; break; }
+      }
+      specialEvent ??= "wanganum";
       if (specialEvent === "nundle-storm") {
         const count = 15 + Math.floor(rng() * 11);
         stormNumbers = Array.from({ length: count }, () => makeGuessItem(rng));
