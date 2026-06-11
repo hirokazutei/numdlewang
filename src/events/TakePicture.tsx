@@ -27,8 +27,18 @@ export function TakePicture({ round, onFinish }: Props) {
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const delayRef = useRef(2000 + Math.floor(Math.random() * 3001));
 
+  // Attach stream to video element after React renders the video node
+  useEffect(() => {
+    if (phase === "live" && streamRef.current && videoRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [phase]);
+
+  // Cycle detection messages while live
   useEffect(() => {
     if (phase !== "live") return;
     const id = setInterval(() => setMsgIdx(m => (m + 1) % DETECT_MSGS.length), 700);
@@ -38,17 +48,11 @@ export function TakePicture({ round, onFinish }: Props) {
   async function startCamera() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-      setPhase("live");
+      streamRef.current = stream;
+      setPhase("live"); // video element renders, then useEffect above attaches stream
 
       setTimeout(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play().catch(() => {});
-        }
-      }, 0);
-
-      setTimeout(() => {
-        // Capture a frame to canvas
+        // Capture frame
         if (videoRef.current && canvasRef.current) {
           const vid = videoRef.current;
           const canvas = canvasRef.current;
@@ -56,9 +60,8 @@ export function TakePicture({ round, onFinish }: Props) {
           canvas.height = vid.videoHeight || 240;
           const ctx = canvas.getContext("2d");
           if (ctx) {
-            // Draw mirrored to match display
             ctx.save();
-            ctx.scale(-1, 1);
+            ctx.scale(-1, 1); // mirror to match display
             ctx.drawImage(vid, -canvas.width, 0);
             ctx.restore();
             setSnapshot(canvas.toDataURL("image/jpeg", 0.85));
@@ -66,6 +69,7 @@ export function TakePicture({ round, onFinish }: Props) {
         }
 
         stream.getTracks().forEach(t => t.stop());
+        streamRef.current = null;
         const correct = round.eventWin ?? true;
         setCaption(correct ? "That's a good numdle!" : "your face is not numdlewang.");
         setPhase("result");
@@ -92,7 +96,7 @@ export function TakePicture({ round, onFinish }: Props) {
 
       {phase === "live" && (
         <div className={styles.videoWrap}>
-          <video ref={videoRef} className={styles.video} muted playsInline autoPlay />
+          <video ref={videoRef} className={styles.video} muted playsInline />
           <div className={styles.detecting}>{DETECT_MSGS[msgIdx]}</div>
         </div>
       )}
@@ -109,7 +113,6 @@ export function TakePicture({ round, onFinish }: Props) {
         </div>
       )}
 
-      {/* Hidden canvas for capture */}
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
       {phase === "denied" && (

@@ -42,8 +42,14 @@ function applyForcedEvent(round: Round, eventType: SpecialEventType): Round {
       return { ...base, stormNumbers: Array.from({ length: 20 }, () => ({ type: "number" as const, value: String(Math.floor(rng() * 999) + 1) })) };
     case "wanganum":
       return { ...base, wanganumDuration: 8000 }; // 8s in dev mode
-    case "helpful-knower":
-      return { ...base, knowerHint: 0, knowerDirection: "left" as const };
+    case "helpful-knower": {
+      const dirs = ["top", "right", "bottom", "left"] as const;
+      return {
+        ...base,
+        knowerHint: Math.floor(Math.random() * Math.max(base.guesses.length, 1)),
+        knowerDirection: dirs[Math.floor(Math.random() * dirs.length)],
+      };
+    }
     case "voice":
     case "take-picture":
       return { ...base, eventWin: true }; // always win in dev for easy testing
