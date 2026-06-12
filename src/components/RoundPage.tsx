@@ -92,7 +92,6 @@ export function RoundPage({ round, index, total, onAdvance, forcedEvent, onRotat
 
   const revealed = chosen !== null;
   const won = revealed && correct === true;
-  const lost = revealed && correct === false;
   const manyGuesses = effectiveRound.guesses.length > 2;
 
   return (
