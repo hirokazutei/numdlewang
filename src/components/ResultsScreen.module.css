@@ -19,6 +19,16 @@
   letter-spacing: 0.04em;
 }
 
+.celebrationWord {
+  position: fixed;
+  font-weight: bold;
+  color: #fbbf24;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.5s ease;
+  text-shadow: 0 0 12px currentColor;
+}
+
 .score {
   font-size: 1.4rem;
   color: #a78bfa;
@@ -34,9 +44,9 @@
   gap: 4px;
 }
 
-.correctNum { color: #34d399; }
+.correctNum { color: #a78bfa; }
 .slash      { color: #888; }
-.totalNum   { color: #f87171; }
+.totalNum   { color: #a78bfa; }
 .label      { font-size: 1rem; color: #888; margin-left: 8px; }
 
 .circles {
@@ -61,6 +71,10 @@
   font-size: 1.5rem;
   color: #888;
   font-family: "Noto Sans Egyptian Hieroglyphs", serif;
+}
+
+.nineEleven {
+  font-size: 1.5rem;
 }
 
 .overflow {

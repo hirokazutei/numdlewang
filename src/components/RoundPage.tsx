@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import confetti from "canvas-confetti";
 import type { Round, SpecialEventType } from "../gameLogic";
 import { createRng } from "../seed";
@@ -17,7 +18,7 @@ interface Props {
   round: Round;
   index: number;
   total: number;
-  onAdvance: (result: boolean | "neutral") => void;
+  onAdvance: (result: boolean | "neutral" | "nine-eleven") => void;
   forcedEvent?: SpecialEventType | null;
   onRotateStart?: () => void;
   onRotateEnd?: () => void;
@@ -75,7 +76,7 @@ export function RoundPage({ round, index, total, onAdvance, forcedEvent, onRotat
   const effectiveRound = forcedEvent ? applyForcedEvent(round, forcedEvent) : round;
   const eventType = effectiveRound.specialEvent;
 
-  function handleAdvance(result: boolean | "neutral") {
+  function handleAdvance(result: boolean | "neutral" | "nine-eleven") {
     setAdvancing(true);
     setTimeout(() => onAdvance(result), 420);
   }
@@ -127,11 +128,16 @@ export function RoundPage({ round, index, total, onAdvance, forcedEvent, onRotat
         {/* ── Normal round ─────────────────────────────────────── */}
         {!eventType && (
           <>
-            <div className={`${styles.result} ${won ? styles.won : ""} ${lost ? styles.lost : ""}`}>
+            <div className={styles.result}>
               {!revealed && <span className={styles.prompt}>Pick a number</span>}
-              {won && <span>numdlewang! 🎉</span>}
-              {lost && <span>numblewrong. :(</span>}
             </div>
+
+            {revealed && createPortal(
+              <div className={`${styles.resultOverlay} ${won ? styles.won : styles.lost}`}>
+                {won ? "numdlewang! 🎉" : "numblewrong. 😢"}
+              </div>,
+              document.body
+            )}
 
             <div className={`${styles.tokens} ${manyGuesses ? styles.tokensMany : ""}`}>
               {effectiveRound.guesses.map((g, i) => (

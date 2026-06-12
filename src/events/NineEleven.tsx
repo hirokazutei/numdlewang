@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./NineEleven.module.css";
 
 interface Props {
-  onFinish: (result: "neutral") => void;
+  onFinish: (result: "nine-eleven") => void;
 }
 
 export function NineEleven({ onFinish }: Props) {
@@ -50,7 +50,7 @@ export function NineEleven({ onFinish }: Props) {
         <div className={styles.memorial}>
           <div className={styles.icons}>🇺🇸 😢</div>
           <p className={styles.caption}>Will you promise to remember?</p>
-          <button className={styles.promiseBtn} onClick={() => onFinish("neutral")}>
+          <button className={styles.promiseBtn} onClick={() => onFinish("nine-eleven")}>
             I will remember.
           </button>
         </div>

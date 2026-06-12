@@ -34,7 +34,7 @@ export interface GameConfig {
 
 const MATH_SYMBOLS = ["√", "∛", "!", "∑", "∏", "∂", "∫", "∞", "≈", "±", "÷", "×"];
 
-// Japanese food — language: Japanese, topic: food
+// Japanese food
 const JAPANESE_FOOD = [
   "寿司", "ラーメン", "天ぷら", "餃子", "お好み焼き",
   "焼き鳥", "たこ焼き", "うどん", "そば", "味噌汁",
@@ -42,8 +42,82 @@ const JAPANESE_FOOD = [
   "唐揚げ", "すき焼き", "しゃぶしゃぶ", "茶碗蒸し", "抹茶",
   "桜餅", "大福", "たい焼き", "わらびもち", "あんみつ",
   "おでん", "チャーハン", "牛丼", "親子丼", "かつ丼",
-  "海鮮丼", "鍋", "焼肉", "冷奴", "みたらし団子",
-  "甘酒", "梅干し", "煮物", "厚焼き卵", "もんじゃ焼き",
+];
+
+// Chinese 4-character proverbs (成语 chéngyǔ)
+const CHINESE_CHENGYU = [
+  "一石二鸟", "马到成功", "一举两得", "半途而废", "亡羊补牢",
+  "守株待兔", "画蛇添足", "对牛弹琴", "掩耳盗铃", "刻舟求剑",
+  "南辕北辙", "井底之蛙", "狐假虎威", "三人成虎", "破釜沉舟",
+  "纸上谈兵", "一鸣惊人", "叶公好龙", "完璧归赵", "卧薪尝胆",
+  "胸有成竹", "愚公移山", "青出于蓝", "塞翁失马", "杯弓蛇影",
+  "一箭双雕", "滥竽充数", "围魏救赵", "功亏一篑", "一刀两断",
+];
+
+// Korean — K-pop fandom terminology
+const KOREAN_KPOP = [
+  "아이돌", "데뷔", "컴백", "팬클럽", "오빠",
+  "언니", "콘서트", "앨범", "타이틀곡", "안무",
+  "팬미팅", "응원봉", "포토카드", "사인회", "세계관",
+  "티저", "뮤직비디오", "성덕", "굿즈", "팬덤",
+  "케이팝", "홈마", "직캠", "음방", "스밍",
+  "입덕", "탈덕", "최애", "차애", "총공",
+];
+
+// Arabic — fast food
+const ARABIC_FASTFOOD = [
+  "برغر", "بيتزا", "شاورما", "فلافل", "كباب",
+  "ناجتس", "هوت دوج", "تاكو", "بوريتو", "دونر",
+  "كنتاكي", "ماكدونالدز", "سبوي", "بطاطس", "كاتشب",
+  "مايونيز", "كولا", "آيسكريم", "ملك شيك", "سندوتش",
+  "دجاج مقلي", "جبنة", "بصل", "طماطم", "صوص",
+  "بيبسي", "رول", "وجبة سعيدة", "كريبس", "نوتيلا",
+];
+
+// Dutch — funny-sounding words
+const DUTCH_FUNNY = [
+  "schildpad", "vliegtuig", "snottebel", "koekoeksklok", "vlooienmarkt",
+  "uitsmijter", "knuffelbeest", "snoepwinkel", "frikandel", "stroopwafel",
+  "appelflap", "hagelslag", "pindakaas", "pannenkoek", "kattenbak",
+  "hamsteren", "boterham", "vuilnisbak", "slagroomtaart", "broodjesaap",
+  "olifant", "sleutelgat", "windmolen", "dropje", "portemonee",
+  "beschuitje", "paperclip", "vliegangst", "eierdopje", "koekje",
+];
+
+// Spanish — internet memes and slang
+const SPANISH_MEMES = [
+  "no manches", "ay dios mío", "órale", "chale", "¡ándale!",
+  "¡híjole!", "chido", "qué onda", "chingón", "dale",
+  "coño", "tío", "hostia", "¡madre mía!", "wey",
+  "no me digas", "¡sale!", "neta", "¡guácala!", "chismoso",
+  "a toda madre", "puchica", "¡épale!", "me vale", "papasito",
+  "¡ay, ay, ay!", "cachetada", "mamacita", "frío frío", "chela",
+];
+
+// French — distinctly Québécois words and swears (sacres)
+const FRENCH_QUEBECOIS = [
+  "tabarnac", "câlice", "ostie", "crisse", "viarge",
+  "baptême", "câline", "maudit", "sacrement", "ciboire",
+  "dépanneur", "tuque", "blonde", "chum", "tantôt",
+  "maganer", "gossant", "écœurant", "boutte", "char",
+  "frette", "grouille", "faque", "bécosses", "patente",
+  "niaiseux", "pogner", "asteure", "motton", "moumoune",
+];
+
+// Russian — leisure activities
+const RUSSIAN_LEISURE = [
+  "баня", "спа", "дача", "шашлык", "рыбалка",
+  "грибы", "сауна", "бассейн", "массаж", "пикник",
+  "прогулка", "дрёма", "чаепитие", "самовар", "гамак",
+  "варенье", "огород", "пляж", "велосипед", "нарды",
+  "шахматы", "загар", "купание", "отдых", "квас",
+  "пельмени", "компот", "лежак", "сиеста", "расслабон",
+];
+
+// All cultural word pools — one is chosen at random per roll
+const CULTURAL_POOLS: readonly string[][] = [
+  JAPANESE_FOOD, CHINESE_CHENGYU, KOREAN_KPOP, ARABIC_FASTFOOD,
+  DUTCH_FUNNY, SPANISH_MEMES, FRENCH_QUEBECOIS, RUSSIAN_LEISURE,
 ];
 
 // Approved hieroglyph set per spec — human figures, animals, birds, plants, geography
@@ -96,7 +170,8 @@ function makeGuessItem(rng: () => number): GuessItem {
   } else if (roll < 0.08) {
     return { type: "hieroglyph", value: HIEROGLYPH_CHARS[Math.floor(rng() * HIEROGLYPH_CHARS.length)] };
   } else if (roll < 0.10) {
-    return { type: "food", value: JAPANESE_FOOD[Math.floor(rng() * JAPANESE_FOOD.length)] };
+    const pool = CULTURAL_POOLS[Math.floor(rng() * CULTURAL_POOLS.length)];
+    return { type: "food", value: pool[Math.floor(rng() * pool.length)] };
   } else {
     return { type: "number", value: makeNumberValue(rng) };
   }
@@ -186,7 +261,7 @@ export function buildGameConfig(dateStr: string): GameConfig {
     rounds.push({ guesses, correctIndex, seededCorrect, specialEvent, stormNumbers, wanganumDuration, knowerHint, knowerDirection, eventWin });
   }
 
-  const scoreGlitch = rng() < 0.1;
+  const scoreGlitch = roundCount >= 2 && rng() < 0.1;
   const timerGlitch = rng() < 0.06;
 
   const glitchCorrect = randInt(rng, 0, Math.max(roundCount, 1));

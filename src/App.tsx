@@ -22,7 +22,7 @@ function randomSeed(): string {
 export default function App() {
   const [screen, setScreen] = useState<"landing" | "game">("landing");
   const [seed, setSeed] = useState(getInitialSeed);
-  const [results, setResults] = useState<(boolean | "neutral")[]>([]);
+  const [results, setResults] = useState<(boolean | "neutral" | "nine-eleven")[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [done, setDone] = useState(false);
   const [devForceEvent, setDevForceEvent] = useState<SpecialEventType | null>(null);
@@ -63,7 +63,7 @@ export default function App() {
     }
   }, [seed]);
 
-  function handleAdvance(correct: boolean | "neutral") {
+  function handleAdvance(correct: boolean | "neutral" | "nine-eleven") {
     const next = [...results, correct];
     setResults(next);
     const isLast = next.length === config.roundCount;
